@@ -35,17 +35,18 @@ router
         }
     })
 
-// router
-//     .route('/:searchTerm')
-//     .post(async (req, res) => {
-//         try{
-//             console.log(req.params.searchTerm);
-//             let info = await games.searchGame(req.params.searchTerm);
-//             res.status(200).json(info);
-//         }catch(e){
-//             res.status(404).json({error: e});
-//         }
-//     })
+router
+    .route('/search/:page/:searchTerm')
+    .get(async (req, res) => {
+        console.log("here");
+        try{
+            console.log(req.params.searchTerm);
+            let info = await games.searchGame(req.params.page, req.params.searchTerm);
+            res.status(200).json(info);
+        }catch(e){
+            res.status(404).json({error: e});
+        }
+    })
 
 router
     .route('/game-details/:id')
