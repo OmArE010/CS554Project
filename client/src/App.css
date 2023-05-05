@@ -9,7 +9,7 @@
 
 .App-header {
 	background-color: #28547a;
-	height: 150px;
+	height: 200px;
 	padding: 20px;
 	color: #222;
 	position: relative;
@@ -134,4 +134,15 @@ img {
 	width:  325px;
 	height: 250px;
   } 
+
+.col-sm-6{
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.fs-2{
+	color: white;
+}
 
