@@ -19,8 +19,8 @@ const getGame = async (id) => {
     return data;
 }
 
-const searchGame = async (searchTerm) => {
-    let url = `https://api.rawg.io/api/games?key=${key}&search=${searchTerm}`;
+const searchGame = async (page, searchTerm) => {
+    let url = `https://api.rawg.io/api/games?key=${key}&page=${page}&search=${searchTerm}`;
     const { data } = await axios.get(url);
     //error checking and throw
     return data;
