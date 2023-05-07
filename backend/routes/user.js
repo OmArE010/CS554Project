@@ -10,7 +10,21 @@ const games = data.gameData;
 
 router
     .route('/login')
-    .get(async (req, res) => {
-    })
+    .post('/', async (req, res) => {
+
+    });
+
+router
+    .route('/logout')
+    .get('/', async (req, res) =>
+    {
+        
+    });
+
+router
+    .route('/signup')
+    .post('/', async (req, res) => {
+
+    });
 
 module.exports = router;
