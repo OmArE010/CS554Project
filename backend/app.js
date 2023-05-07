@@ -1,14 +1,14 @@
 const express = require('express');
-// const app = express();
-// app.use(express.json());
-// const configRoutes = require("./routes");
-// const cors = require('cors');
+const app = express();
+app.use(express.json());
+const configRoutes = require("./routes");
+const cors = require('cors');
 
-// configRoutes(app);
+configRoutes(app);
 
-// app.use(cors());
+app.use(cors());
 
-const http = require('http').createServer(express);
+const http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
@@ -25,7 +25,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', ({name, message, roomName}) => {
-    console.log(name, message, roomName, socket.id);
     if (Object.values(socket.rooms).indexOf('Room1') > -1) {
       console.log(`room1 found`);
     }
@@ -44,9 +43,3 @@ io.on('connection', (socket) => {
 http.listen(4000, () => {
   console.log(`listening on *:${4000}`);
 });
-
-
-// app.listen(4000, () => {
-// 	console.log("Server is now running on http://localhost:4000");
-// });
-
