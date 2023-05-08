@@ -31,4 +31,4 @@ const LoginForm = () =>
     );
 }
 
-export default SignUpForm;
+export default LoginForm;
