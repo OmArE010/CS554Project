@@ -8,10 +8,29 @@ const data = require('../data');
 const users = data.userData;
 const games = data.gameData;
 
-router.get(async (req, res) => {
+router.route('/).get(async (req, res) => {
     if (req.session.user) return res.redirect("/private");
     return res.render("login_page");
-  })
+  });
+  
+router
+    .route('/login')
+    .post('/', async (req, res) => {
+
+    });
+
+router
+    .route('/logout')
+    .get('/', async (req, res) =>
+    {
+        
+    });
+
+router
+    .route('/signup')
+    .post('/', async (req, res) => {
+
+    });
 
   .post(async (req, res) => {
     try {

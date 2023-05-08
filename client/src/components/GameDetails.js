@@ -9,9 +9,7 @@ import {
     Typography,
     CardHeader
   } from '@mui/material';
-
-
-
+import SellModal from '../Modals/SellModal';
 
   const GameDetails = (props) => {
     const [gameData, setgameData] = useState(undefined);
