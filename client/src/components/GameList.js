@@ -4,6 +4,7 @@ import {Link, useParams, useNavigate} from 'react-router-dom';
 import '../App.css';
 import GameDetails from './GameDetails';
 import Search from './Search';
+import SellModal from '../Modals/SellModal';
 
 function GameList () {
     let {pagenum} = useParams();
