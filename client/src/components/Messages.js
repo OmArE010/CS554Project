@@ -2,34 +2,48 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import "../App.css";
 
-const fakeMessages = [{}, {}];
-
 function Messages() {
-  const [state, setState] = useState({ message: "", name: "", room: "" });
+  const [state, setState] = useState({ message: "", sender: "" });
   const [chat, setChat] = useState([]);
-  const [room, setRoom] = useState("Room1");
+  const [sendTo, setSendTo] = useState("");
+  const [users, setUsers] = useState([]);
 
   const socketRef = useRef();
   const chatLogRef = useRef(null);
 
   useEffect(() => {
     socketRef.current = io("/");
+
+    // need to implement backend route (fetchAllMessages)
+
+    // const allMessages = fetchAllMessages();
+    // const allUsers = [];
+    // allMessages.map(({ sender, message, receiver }, index) => {
+    //   if (sender === state.sender) allUsers.push(receiver);
+    //   if (receiver === state.sender) allUsers.push(sender);
+    // });
+    // setChat(allMessages);
+    // setUsers(allUsers);
+
     return () => {
       socketRef.current.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    socketRef.current.on("message", ({ name, message, roomName }) => {
-      setChat([...chat, { name, message, roomName }]);
+    socketRef.current.on("message", ({ sender, message, receiver }) => {
+      setChat([...chat, { sender, message, receiver }]);
+      if (receiver === state.sender) {
+        if (!users.includes(sender)) setUsers([...users, sender]);
+      }
     });
     socketRef.current.on("user_join", function (data) {
       setChat([
         ...chat,
         {
-          name: "ChatBot",
-          message: `${data} has joined the ${room}`,
-          roomName: room,
+          sender: "ChatBot",
+          message: `${data} has joined the global.`,
+          receiver: state.sender,
         },
       ]);
     });
@@ -42,7 +56,7 @@ function Messages() {
       socketRef.current.off("message");
       socketRef.current.off("user_join");
     };
-  }, [chat]);
+  }, [chat, users]);
 
   const userjoin = (name) => {
     socketRef.current.emit("user_join", name);
@@ -50,64 +64,35 @@ function Messages() {
 
   const onMessageSubmit = (e) => {
     let msgEle = document.getElementById("message");
-    setState({ ...state, [msgEle.name]: msgEle.value });
     socketRef.current.emit("message", {
-      name: state.name,
+      sender: state.sender,
       message: msgEle.value,
-      roomName: room,
+      receiver: sendTo,
     });
     e.preventDefault();
-    setState({ message: "", name: state.name, roomName: room });
+    setState({ message: "", sender: state.sender });
     msgEle.value = "";
     msgEle.focus();
   };
 
-  // const renderChat = () => {
-    
-  //   return chat.map(({ name, message, roomName }, index) => {
-  //     if (roomName === room) {
-  //       console.log(`name, state.name: ${name} ${state.name}`);
-  //       return (
-  //         <div key={index}>
-  //           {name === state.name ? (
-  //             <br />
-  //           ) : (
-  //             <h3
-  //               id="chatm"
-  //               className="chat-name"
-  //             >
-  //               {name}
-  //             </h3>
-  //           )}
-  //           <span
-  //             className={
-  //               name === state.name ? "chat-message self" : "chat-message"
-  //             }
-  //           >
-  //             {message}
-  //           </span>
-  //         </div>
-  //       );
-  //     }
-  //     return null;
-  //   });
-  // };
-
   const renderChat = () => {
     let prevSender = null;
-    return chat.map(({ name, message, roomName }, index) => {
-      if (roomName === room) {
-        const sameSender = prevSender === name;
-        prevSender = name;
+    return chat.map(({ sender, message, receiver }, index) => {
+      if (
+        (sender === state.sender || receiver === state.sender) &&
+        (sender === sendTo || receiver === sendTo)
+      ) {
+        const sameSender = prevSender === sender;
+        prevSender = sender;
         return (
           <div key={index}>
-            {!sameSender && name!==state.name && (
-              <h3 className="chat-name">
-                {name}
-              </h3>
+            {!sameSender && sender !== state.sender && (
+              <h3 className="chat-name">{sender}</h3>
             )}
             <span
-              className={name===state.name ? "chat-message self" : "chat-message"}
+              className={
+                sender === state.sender ? "chat-message self" : "chat-message"
+              }
             >
               {message}
             </span>
@@ -119,42 +104,46 @@ function Messages() {
   };
 
   return (
-    <div class="messages">
-      {state.name && (
+    <div className="messages">
+      {state.sender && (
         <div className="messages-container">
           <div className="messages-bar">
-            <h2>Messages {socketRef.current.id}</h2>
+            <h2>Messages</h2>
             <div className="messages-list">
               <div className="messages-users">
-                {/* {users.map((user) => (
-                    <p key={user.socketID}>{user.userName}</p>
-                  ))} */}
                 <div>
                   <button
                     onClick={() => {
-                      setRoom("Room1");
-                      socketRef.current.emit("room", "Room1");
+                      setSendTo("Johnny");
                     }}
+                    className="users-list"
                   >
-                    Join Room 1
+                    Johnny
                   </button>
                 </div>
-                <div>
-                  <button
-                    onClick={() => {
-                      setRoom("Room2");
-                      socketRef.current.emit("room", "Room2");
-                    }}
-                  >
-                    Join Room 2
-                  </button>
-                </div>
+                {users.map((user) => (
+                  <div>
+                    <button
+                      onClick={() => {
+                        setSendTo(user);
+                      }}
+                      className={
+                        sendTo === user ? "messages-selected" : "users-list"
+                      }
+                    >
+                      {user}
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
           <div className="messages-body">
             <div className="render-chat">
-              <p className="room-chat">{room}</p>
+              <div className="room-chat">
+                <p className="room-chat-to">To: </p>
+                <span className="room-chat-name">{sendTo}</span>
+              </div>
               <div className="chat-log" ref={chatLogRef}>
                 {renderChat()}
               </div>
@@ -175,12 +164,14 @@ function Messages() {
         </div>
       )}
 
-      {!state.name && (
+      {!state.sender && (
         <form
           className="form"
           onSubmit={(e) => {
             e.preventDefault();
-            setState({ name: document.getElementById("username_input").value });
+            setState({
+              sender: document.getElementById("username_input").value,
+            });
             userjoin(document.getElementById("username_input").value);
             // userName.value = '';
           }}

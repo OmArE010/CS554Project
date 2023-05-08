@@ -189,12 +189,21 @@ img {
   flex-direction: column;
 }
 
+.room-chat-to {
+  text-align: left;
+  margin-bottom: 8px;
+}
+
 .room-chat {
-  margin-bottom: 0px;
-  margin-top: 0px;
-  font-weight: 600;
   border-bottom: 1px solid #ddd;
-  padding-bottom: 5px;
+  text-align: left;
+  flex-direction: row;
+  display: flex;
+  margin-left: 10px;
+}
+
+.room-chat-name {
+  margin-left: 13px;
 }
 
 .chat-message {
@@ -227,7 +236,7 @@ img {
 
 .chat-name {
   margin-top: 10px;
-  font-size: 18px;
+  font-size: 16px;
   color: gray;
   margin-bottom: 3px;
   margin-left: 20px;  
@@ -261,11 +270,12 @@ img {
 }
 
 .messages-bar {
-  height: 100%;
-  background-color: #f9f5eb;
+  height: 79vh;
+  background-color: white;
   flex: 0.2;
   padding: 20px;
   border-right: 1px solid #fdfdfd;
+  overflow-y: scroll;
 }
 
 .messages-header {
@@ -287,4 +297,22 @@ img {
 }
 .messages-list {
   margin-top: 40px;
+}
+
+.messages-selected {
+  border: none;
+  /* background-color: #f1f1f1; */
+  background-color: #0084ff;
+  width: 100%;
+  padding: 20px;
+  border-radius: 24px;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+}
+
+.users-list {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  padding: 20px;
 }
