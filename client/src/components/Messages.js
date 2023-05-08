@@ -62,14 +62,55 @@ function Messages() {
     msgEle.focus();
   };
 
+  // const renderChat = () => {
+    
+  //   return chat.map(({ name, message, roomName }, index) => {
+  //     if (roomName === room) {
+  //       console.log(`name, state.name: ${name} ${state.name}`);
+  //       return (
+  //         <div key={index}>
+  //           {name === state.name ? (
+  //             <br />
+  //           ) : (
+  //             <h3
+  //               id="chatm"
+  //               className="chat-name"
+  //             >
+  //               {name}
+  //             </h3>
+  //           )}
+  //           <span
+  //             className={
+  //               name === state.name ? "chat-message self" : "chat-message"
+  //             }
+  //           >
+  //             {message}
+  //           </span>
+  //         </div>
+  //       );
+  //     }
+  //     return null;
+  //   });
+  // };
+
   const renderChat = () => {
+    let prevSender = null;
     return chat.map(({ name, message, roomName }, index) => {
       if (roomName === room) {
+        const sameSender = prevSender === name;
+        prevSender = name;
         return (
           <div key={index}>
-            <h3 id="chatm" className="chat-message">
-              {name}: <span>{message}</span>
-            </h3>
+            {!sameSender && name!==state.name && (
+              <h3 className="chat-name">
+                {name}
+              </h3>
+            )}
+            <span
+              className={name===state.name ? "chat-message self" : "chat-message"}
+            >
+              {message}
+            </span>
           </div>
         );
       }
@@ -124,7 +165,7 @@ function Messages() {
                     id="message"
                     variant="outlined"
                     label="Message"
-                    placeholder="Write a message..."
+                    placeholder="Type a message..."
                   />
                   <button type="submit">{">"}</button>
                 </div>
