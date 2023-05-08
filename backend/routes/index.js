@@ -1,5 +1,6 @@
 const userRoutes = require('./user');
 const gameRoutes = require('./game');
+const messageRoutes = require('./message');
 const cors = require('cors');
 
 const constructorMethod = (app) => {
@@ -7,6 +8,7 @@ const constructorMethod = (app) => {
     app.use('/login', userRoutes);
     app.use('/signup', userRoutes);
     app.use('/games', gameRoutes);
+    app.use('/messages', messageRoutes);
     app.use('/game-details', gameRoutes);
     app.use('/user', userRoutes);
   

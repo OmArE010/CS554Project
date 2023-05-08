@@ -7,6 +7,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Searching from './components/Searching';
 import Search from './components/Search';
+import Messages from './components/Messages';
 
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
                     <a className="nav-link" href="#">Pricing</a>
                   </li>
                 </ul>
+                <NavLink className='navlink' to='/messages'>
+                 Messages
+                </NavLink>
                 <NavLink className='navlink' to='/login'>
                  Login
                 </NavLink>
@@ -56,6 +60,7 @@ function App() {
           <Route exact path = '/login' element={<Login />}/>
           <Route exact path = '/signup' element={<SignUp />}/>
           <Route exact path = '/search/:page/:search' element={<Search />}/>
+          <Route exact path = '/messages' element={<Messages />}/>
         </Routes>
       </div>
     </Router>
