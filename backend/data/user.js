@@ -93,9 +93,18 @@ const updateUser = async (username, gameId, gameName, price, condition, location
 	return user;
 }
 
+const getSelling = async(username) => {
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	username = username.toLowerCase().trim();
+	let user = users.findOne({username: username});
+	return user.gamesSelling;
+}
+
 module.exports = {
     createUser, 
     validateUser, 
     getUser,
-	updateUser
+	updateUser,
+	getSelling
 }
