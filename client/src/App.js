@@ -27,7 +27,7 @@ function App() {
                     <a className="nav-link active" aria-current="page" href="/games/1">Home</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">Features</a>
+                    <a className="nav-link" href="#">Selling</a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#">Pricing</a>

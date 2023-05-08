@@ -38,9 +38,9 @@ router
 router
     .route('/search/:page/:searchTerm')
     .get(async (req, res) => {
-        console.log("here");
+        //console.log("here");
         try{
-            console.log(req.params.searchTerm);
+            //console.log(req.params.searchTerm);
             let info = await games.searchGame(req.params.page, req.params.searchTerm);
             res.status(200).json(info);
         }catch(e){
@@ -66,5 +66,6 @@ router
             res.status(404).json({error: e});
         }
     })
+
 
 module.exports = router;
