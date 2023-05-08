@@ -76,7 +76,7 @@ function GameList () {
             </nav>
             <br/>
             <br/>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div className="row row-cols-1 row-cols-md-2 g-4">
             {gameData.map((game) => {
                 if(game.background_image){
                     img = game.background_image;
@@ -96,7 +96,7 @@ function GameList () {
                                     return <p styles="display:inline;" key={genre.name}>{genre.name}</p>
                                 })}</li>
                             </ul>
-                            <button className="btn btn-primary" onClick={() => navigate(`/game/${game.id}`)}>Get Details</button>
+                            <button className="btn btn-primary" onClick={() => {navigate(`/game/${game.id}`)}}>Get Details</button>
                         </div>
                     </div>
                 </div>

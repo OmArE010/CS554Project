@@ -67,5 +67,21 @@ router
         }
     })
 
+router
+    .route('/copies/:id')
+    .get(async (req, res) => {
+        let info = await games.getCopies(req.params.id);
+        res.status(200).json(info);
+    })
+
+router
+    .route('/sell')
+    .post(async (req, res) => {
+        console.log(req.body);
+        let info = await games.createSellingGame(req.body.gameId, req.body.gameName);
+        console.log('here');
+        res.status(200).json(info);
+    })
+
 
 module.exports = router;

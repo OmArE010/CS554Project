@@ -7,7 +7,6 @@ const constructorMethod = (app) => {
     app.use('/login', userRoutes);
     app.use('/signup', userRoutes);
     app.use('/games', gameRoutes);
-    app.use('/game-details', gameRoutes);
     app.use('/user', userRoutes);
   
     app.use('*', (req, res) => {
