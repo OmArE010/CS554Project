@@ -225,7 +225,7 @@ img {
 
 .chat-message.self {
   float: right;
-  background-color: #0084ff;
+  background-color: #0075e3;
   color: #fff;
   margin-right: 20px;
 }
@@ -237,7 +237,7 @@ img {
 .chat-name {
   margin-top: 10px;
   font-size: 16px;
-  color: gray;
+  color: #767676;
   margin-bottom: 3px;
   margin-left: 20px;  
 }
@@ -302,7 +302,7 @@ img {
 .messages-selected {
   border: none;
   /* background-color: #f1f1f1; */
-  background-color: #0084ff;
+  background-color: #0075e3;
   width: 100%;
   padding: 20px;
   border-radius: 24px;
@@ -315,4 +315,8 @@ img {
   background-color: transparent;
   width: 100%;
   padding: 20px;
+}
+
+.message-label {
+  display: none;
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import io from "socket.io-client";
 import "../App.css";
 
@@ -7,23 +8,43 @@ function Messages() {
   const [chat, setChat] = useState([]);
   const [sendTo, setSendTo] = useState("");
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const socketRef = useRef();
   const chatLogRef = useRef(null);
+  const axiosRef = useRef(axios);
 
   useEffect(() => {
     socketRef.current = io("/");
 
     // need to implement backend route (fetchAllMessages)
 
-    // const allMessages = fetchAllMessages();
-    // const allUsers = [];
-    // allMessages.map(({ sender, message, receiver }, index) => {
-    //   if (sender === state.sender) allUsers.push(receiver);
-    //   if (receiver === state.sender) allUsers.push(sender);
-    // });
-    // setChat(allMessages);
-    // setUsers(allUsers);
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(`http://localhost:4000/messages`);
+        console.log(data);
+        const allUsers = [];
+        data.map(({ sender, message, receiver }, index) => {
+          if (sender === state.sender) {
+            if (!allUsers.includes(receiver)) allUsers.push(receiver);
+          }
+          if (receiver === state.sender) {
+            if (!allUsers.includes(sender)) allUsers.push(sender);
+          }
+        });
+        setLoading(false);
+        setChat(data);
+        setUsers(allUsers);
+        if (allUsers.length > 0) {
+          setSendTo(allUsers[0]);
+        }
+      } catch (e) {
+        console.log(e);
+        setError(true);
+      }
+    };
+    fetchData();
 
     return () => {
       socketRef.current.disconnect();
@@ -62,17 +83,32 @@ function Messages() {
     socketRef.current.emit("user_join", name);
   };
 
-  const onMessageSubmit = (e) => {
-    let msgEle = document.getElementById("message");
-    socketRef.current.emit("message", {
-      sender: state.sender,
-      message: msgEle.value,
-      receiver: sendTo,
-    });
-    e.preventDefault();
-    setState({ message: "", sender: state.sender });
-    msgEle.value = "";
-    msgEle.focus();
+  const onMessageSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      let msgEle = document.getElementById("message");
+      axiosRef.current.defaults.url = window.location.href;
+
+      const { data } = await axiosRef.current.post(
+        `http://localhost:4000/messages`,
+        {
+          sender: state.sender,
+          message: msgEle.value,
+          receiver: sendTo,
+        }
+      );
+      socketRef.current.emit("message", {
+        sender: state.sender,
+        message: msgEle.value,
+        receiver: sendTo,
+      });
+      setState({ message: "", sender: state.sender });
+      msgEle.value = "";
+      msgEle.focus();
+    } catch (e) {
+      console.log(e);
+      setError(true);
+    }
   };
 
   const renderChat = () => {
@@ -103,6 +139,22 @@ function Messages() {
     });
   };
 
+  if (error) {
+    return (
+      <div>
+        <h1>404 ERROR: NOT FOUND</h1>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="messages">
       {state.sender && (
@@ -121,20 +173,27 @@ function Messages() {
                     Johnny
                   </button>
                 </div>
-                {users.map((user) => (
+
+                {users.length === 0 ? (
                   <div>
-                    <button
-                      onClick={() => {
-                        setSendTo(user);
-                      }}
-                      className={
-                        sendTo === user ? "messages-selected" : "users-list"
-                      }
-                    >
-                      {user}
-                    </button>
+                    <p>No one to message</p>
                   </div>
-                ))}
+                ) : (
+                  users.map((user) => (
+                    <div>
+                      <button
+                        onClick={() => {
+                          setSendTo(user);
+                        }}
+                        className={
+                          sendTo === user ? "messages-selected" : "users-list"
+                        }
+                      >
+                        {user}
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -149,11 +208,13 @@ function Messages() {
               </div>
               <form className="send-box" onSubmit={onMessageSubmit}>
                 <div>
+                  <label for="message" className="message-label">
+                    Type a message
+                  </label>
                   <input
                     name="message"
                     id="message"
                     variant="outlined"
-                    label="Message"
                     placeholder="Type a message..."
                   />
                   <button type="submit">{">"}</button>
