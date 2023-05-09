@@ -13,9 +13,9 @@ function SellModal(props) {
     const handleSubmit = async (e) => {
         try{
             e.preventDefault();
-            let game = await axios.post(`http://localhost:4000/games/sell`, {username: null, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            let game = await axios.post(`http://localhost:4000/games/sell`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
             condition: e.target.condition.value, location: e.target.location.value});
-            let user = await axios.post(`http://localhost:4000/user/update-user`, {username: null, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            let user = await axios.post(`http://localhost:4000/user/update-user`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
             condition: e.target.condition.value, location: e.target.location.value});
             console.log(game);
             alert("Your game is now being sold!");

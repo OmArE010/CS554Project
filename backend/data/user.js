@@ -109,10 +109,26 @@ const getSelling = async(username) => {
 	return user.gamesSelling;
 }
 
+const getPrices = async(username, gameId) => {
+	let prices = [];
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	username = username.toLowerCase().trim();
+	let user = await users.findOne({username: username});
+	for (let i = 0; i < user.gamesSelling.length; i ++){
+		if(user.gamesSelling[i].gameId == gameId){
+			//prices[user.gamesSelling[i].id] = [user.gamesSelling[i].gameName, user.gamesSelling[i].price];
+			prices.push({seller: username, id: user.gamesSelling[i].id, name: user.gamesSelling[i].gameName, price: user.gamesSelling[i].price});
+		}
+	}
+	return prices;
+}
+
 module.exports = {
     createUser, 
     validateUser, 
     getUser,
 	updateUser,
-	getSelling
+	getSelling,
+	getPrices
 }
