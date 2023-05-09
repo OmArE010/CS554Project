@@ -116,6 +116,7 @@ const getPrices = async(username, gameId) => {
 	let users = await usersCollection();
 	username = username.toLowerCase().trim();
 	let user = await users.findOne({username: username});
+	console.log(user);
 	for (let i = 0; i < user.gamesSelling.length; i ++){
 		if(user.gamesSelling[i].gameId == gameId){
 			//prices[user.gamesSelling[i].id] = [user.gamesSelling[i].gameName, user.gamesSelling[i].price];
