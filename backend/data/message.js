@@ -8,15 +8,15 @@ const addMessage = async (sender, message, receiver) => {
   message = message.trim();
   console.log(`before messages data: ${message}`);
 
-  // let users = await usersCollection();
+  let users = await usersCollection();
   let messages = await messagesCollection();
 
-  // let senderCheck = await users.findOne({ username: sender });
+  let senderCheck = await users.findOne({ username: sender.username });
   // let receiverCheck = await users.findOne({ username: receiver });
 
-  // if (!senderCheck) {
-  // 	throw `invalid sender`;
-  // }
+  if (!senderCheck) {
+  	throw `invalid sender`;
+  }
   // if (!receiverCheck) {
   // 	throw `invalid receiver`;
   // }

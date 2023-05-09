@@ -7,37 +7,21 @@ client.connect().then(() => {});
 const data = require("../data");
 const users = data.userData;
 const games = data.gameData;
-router.use(express.urlencoded({extended: true}));
+router.use(express.urlencoded({ extended: true }));
 
 // router.route('/').get(async (req, res) => {
 //     if (req.session.user) return res.redirect("/private");
 //     return res.render("login_page");
 //   });
-  
-router
-    .route('/login')
-    .post(async (req, res) => {
-        console.log('here');
-        try {
-            const { username, password } = req.body;
-            const user = await users.validateUser(username, password);
-            if (user) {
-                //req.session.user = user;
-                return res.status(200).json(user);
-            }
-        } catch (e) {
-            console.log(e);
-            res.status(400).json({error: e});
-        }
-    });
 
 router.route("/login").post(async (req, res) => {
+  console.log("here");
   try {
     const { username, password } = req.body;
     const user = await users.validateUser(username, password);
     if (user) {
-      req.session.user = user;
-      return res.status(200).json({...user, redirectUrl: '/games/1'});
+      //req.session.user = user;
+      return res.status(200).json(user);
     }
   } catch (e) {
     console.log(e);
@@ -45,6 +29,19 @@ router.route("/login").post(async (req, res) => {
   }
 });
 
+router.route("/login").post(async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await users.validateUser(username, password);
+    if (user) {
+      req.session.user = user;
+      return res.status(200).json({ ...user, redirectUrl: "/games/1" });
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: e });
+  }
+});
 
 // router.post("/signup", async (req, res) => {
 //   try {
@@ -62,23 +59,32 @@ router.route("/login").post(async (req, res) => {
 //     return res.status(500).json({ error: e });
 //   }
 // });
-router
-    .route('/signup')
-    .post(async (req, res) => {
-        try {
-            const { firstname, lastname, username, password } = req.body;
-            const newUser = await users.createUser(firstname, lastname, username, password);
-            //req.session.user = newUser;
-            console.log(newUser);
-            return newUser;
-          } catch (e) {
-            return res.status(500).json({ error: e});
-          }
-    });
+router.route("/signup").post(async (req, res) => {
+  try {
+    const { firstname, lastname, username, password } = req.body;
+    const newUser = await users.createUser(
+      firstname,
+      lastname,
+      username,
+      password
+    );
+    //req.session.user = newUser;
+    console.log(newUser);
+    return newUser;
+  } catch (e) {
+    return res.status(500).json({ error: e });
+  }
+});
 
 router.route("/logout").get(async (req, res) => {
   req.session.destroy();
   return res.redirect("/");
+});
+
+router.route("/get-user").get(async (req, res) => {
+  const { username } = req.body;
+  let info = await users.getUserByUsername(username);
+  return res.status(200).json(info);
 });
 
 router.route("/register").get(async (req, res) => {
@@ -104,15 +110,15 @@ router.route("/register").post(async (req, res) => {
 });
 
 router.route("/private").get(async (req, res) => {
-    if (!req.session.user) return res.redirect("/");
-    const user = req.session.user;
-    const userGames = user.games;
-    const gameList = [];
-    for (let i = 0; i < userGames.length; i++) {
-        const game = await games.getGameById(userGames[i]);
-        gameList.push(game);
-    }
-    return res.render("private_page", { user: user, games: gameList });
+  if (!req.session.user) return res.redirect("/");
+  const user = req.session.user;
+  const userGames = user.games;
+  const gameList = [];
+  for (let i = 0; i < userGames.length; i++) {
+    const game = await games.getGameById(userGames[i]);
+    gameList.push(game);
+  }
+  return res.render("private_page", { user: user, games: gameList });
 });
 
 // router.route("/private").post(async (req, res) => {
@@ -125,12 +131,18 @@ router.route("/private").get(async (req, res) => {
 //     return res.redirect("/private");
 // });
 
-router
-    .route('/update-user')
-    .post(async (req, res) => {
-        let info = await users.updateUser(req.body.username, req.body.gameId, req.body.gameName, req.body.price, req.body.condition, req.body.location);
-        res.status(200).json(info);
-    })
+router.route("/update-user").post(async (req, res) => {
+  let info = await users.updateUser(
+    req.body.username,
+    req.body.gameId,
+    req.body.gameName,
+    req.body.price,
+    req.body.condition,
+    req.body.location
+  );
+  res.status(200).json(info);
+});
+
 
 router
     .route('/get-prices/:username/:gameId')
