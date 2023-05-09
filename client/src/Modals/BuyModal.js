@@ -18,7 +18,6 @@ function BuyModal(props) {
 
   useEffect(() => {
     socketRef.current = io("/");
-
     const fetchData = async () => {
       try {
         // const { data } = await axios.get(

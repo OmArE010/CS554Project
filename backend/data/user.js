@@ -65,82 +65,82 @@ const getUser = async (username) => {
   validation.errorIfNotProperUserName(username, "username");
 
   let users = await usersCollection();
-  username = username.toLowerCase().trim();
-  let user = await users.findOne({ username: username });
-  if (!user) throw `User not present`;
+	username = username.toLowerCase().trim();
+	let user = await users.findOne({ username: username });
+	if (!user) throw `User not present`;
 
-  return user;
-};
+	return user;
+}
 
-const updateUser = async (
-  username,
-  gameId,
-  gameName,
-  price,
-  condition,
-  location
-) => {
-  validation.errorIfNotProperUserName(username, "username");
-  let users = await usersCollection();
-  username = username.toLowerCase().trim();
-  let user = await users.findOne({ username: username });
-  console.log(user);
-  if (!user) throw `User not present`;
+const updateUser = async (username, gameId, gameName, price, condition, location) => {
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	username = username.toLowerCase().trim();
+	let user = await users.findOne({ username: username });
+	console.log(user);
+	if (!user) throw `User not present`;
 
-  let updatedGamesSelling = {
-    id: uuidv4(),
-    gameId: gameId,
-    gameName: gameName,
-    price: price,
-    condition: condition,
-    location: location,
-  };
-  const updatedInfo = await users.updateOne(
-    { username: username },
-    { $push: { gamesSelling: updatedGamesSelling } }
-  );
+	let updatedGamesSelling = ({
+		id: uuidv4(),
+		gameId: gameId,
+		gameName: gameName,
+		price: price,
+		condition: condition,
+		location: location
+	});
+	const updatedInfo = await users.updateOne({username: username}, {$push: {gamesSelling: updatedGamesSelling}});
 
-  if (updatedInfo.modifiedCount === 0 && !updatedInfo.matchedCount) {
-    throw "could not update recipe successfully";
-  }
+	if(updatedInfo.modifiedCount === 0 && !updatedInfo.matchedCount){
+		throw "could not update recipe successfully";
+	  }
 
-  return getUser(username);
-};
+	return getUser(username);
+}
 
-const getSelling = async (username) => {
-  validation.errorIfNotProperUserName(username, "username");
-  let users = await usersCollection();
-  username = username.toLowerCase().trim();
-  let user = users.findOne({ username: username });
-  return user.gamesSelling;
-};
+const getSelling = async(username) => {
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	username = username.toLowerCase().trim();
+	let user = await users.findOne({username: username});
+	console.log(user);
+	return user.gamesSelling;
+}
 
-const getPrices = async (username, gameId) => {
-  let prices = [];
-  validation.errorIfNotProperUserName(username, "username");
-  let users = await usersCollection();
-  username = username.toLowerCase().trim();
-  let user = await users.findOne({ username: username });
-  console.log(user);
-  for (let i = 0; i < user.gamesSelling.length; i++) {
-    if (user.gamesSelling[i].gameId == gameId) {
-      //prices[user.gamesSelling[i].id] = [user.gamesSelling[i].gameName, user.gamesSelling[i].price];
-      prices.push({
-        seller: username,
-        id: user.gamesSelling[i].id,
-        name: user.gamesSelling[i].gameName,
-        price: user.gamesSelling[i].price,
-      });
-    }
-  }
-  return prices;
-};
+const getPrices = async(username, gameId) => {
+	let prices = [];
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	username = username.toLowerCase().trim();
+	let user = await users.findOne({username: username});
+	console.log(user);
+	for (let i = 0; i < user.gamesSelling.length; i ++){
+		if(user.gamesSelling[i].gameId == gameId){
+			//prices[user.gamesSelling[i].id] = [user.gamesSelling[i].gameName, user.gamesSelling[i].price];
+			prices.push({seller: username, id: user.gamesSelling[i].id, name: user.gamesSelling[i].gameName, price: user.gamesSelling[i].price});
+		}
+	}
+	return prices;
+}
+
+//delete game from selling
+const deletesellingGame = async (username, gameId) => {
+	console.log(username, gameId);
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	let usersellingid = await users.findOne({"newUser.gamesSelling": gameId});
+	if(!userselling){
+		throw `game not found`;
+	}
+	let deleteuser =  user.deleteOne(usersellingid);
+}
 
 module.exports = {
-  createUser,
-  validateUser,
-  getUser,
-  updateUser,
-  getSelling,
-  getPrices,
-};
+    createUser, 
+    validateUser, 
+    getUser,
+	updateUser,
+	getSelling,
+	getPrices,
+	deletesellingGame
+	
+}

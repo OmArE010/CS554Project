@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 import "../App.css";
@@ -72,7 +71,7 @@ const LoginForm = (props) => {
             <input
               id="password"
               name="password"
-              type="text"
+              type="password"
               className="form-control"
               placeholder="Password"
               required
@@ -85,7 +84,7 @@ const LoginForm = (props) => {
             value="Submit"
           />
           <br />
-          <a href="/signup"> Don't have an account? Click here to sign-up! </a>
+          <Link to="/signup" className="link"> Don't have an account? Click here to sign-up! </Link>
         </div>
       </form>
     </div>
