@@ -23,13 +23,13 @@ function SellModal(props) {
             condition: e.target.condition.value, location: e.target.location.value});
             console.log(game);
             alert("Your game is now being sold!");
-          }else {
-            setError(true);
-            navigate(`/login`);
+            }else {
+                setError(true);
+                navigate(`/login`);
+            }
         }catch(e){
             alert(e);
         }
-    }
   };
 
   return (
