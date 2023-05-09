@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SignUpForm = () => 
 {
@@ -49,12 +50,12 @@ const SignUpForm = () =>
           <br />
           <label className='form-label'>
             Password:
-            <input id='password' name='password' type='text' className='form-control'
+            <input id='password' name='password' type='password' className='form-control'
               placeholder='Password' required
             />
             <div class="col-auto">
             <span id="passwordHelpInline" class="form-text">
-            Must Contain a Special Character.
+            Must Contain Capital Letter and Special Character.
             </span>
         </div>
           </label>
@@ -62,7 +63,7 @@ const SignUpForm = () =>
           <br />
           <input className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none' type='submit' value='Submit' />
           <br />
-          <a href="/login"> Already have an account? Click here to log-in! </a>
+          <Link to="/login" className='link'> Already have an account? Click here to log-in! </Link>
         </form>
       </div>
     );

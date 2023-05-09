@@ -19,8 +19,10 @@ import Selling from "./components/Selling";
 import { useSession } from "react-session";
 import { useDispatch, useSelector } from "react-redux";
 import store from "./store";
+import actions from './actions';
 
 function App() {
+  let dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   console.log(user);
   return (
@@ -146,9 +148,9 @@ function App() {
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                  <NavLink className="nav-link active" to="/selling">
+                  {user.loggedIn ? <NavLink className="nav-link active" to="/selling">
                   Selling
-                </NavLink>
+                </NavLink> : null}
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#">
@@ -156,16 +158,23 @@ function App() {
                     </a>
                   </li>
                 </ul>
-                <NavLink className="navlink" to="/messages">
+                {user.loggedIn ? <NavLink className="navlink" to="/messages">
                   Messages
-                </NavLink>
+                </NavLink> : null}
                 {!user.loggedIn ? <NavLink className="navlink" to="/login">
                   Login
                 </NavLink> : null}
                 {!user.loggedIn ? <NavLink className="navlink" to="/signup">
                   Sign Up
                 </NavLink> : null}
-                {user.loggedIn ? <button className="navlink">LogOut</button> : null}
+                {user.loggedIn ? <button className="navlink" onClick={() => {dispatch(actions.setUser(
+                  user.username,
+                  user.firstname,
+                  user.lastname,
+                  user.password,
+                  user.gamesSelling,
+                  false
+                )); alert('You have been logged out.')}}>LogOut</button> : null}
               </div>
               <Searching />
             </div>
