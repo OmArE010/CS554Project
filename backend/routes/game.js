@@ -78,8 +78,7 @@ router
     .route('/sell')
     .post(async (req, res) => {
         console.log(req.body);
-        let info = await games.createSellingGame(req.body.gameId, req.body.gameName);
-        console.log('here');
+        let info = await games.createSellingGame(req.body.username, req.body.gameId, req.body.gameName, req.body.price, req.body.condition, req.body.location);
         res.status(200).json(info);
     })
 

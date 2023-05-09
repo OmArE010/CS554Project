@@ -3,16 +3,25 @@ import axios from 'axios';
 import {Link, useParams, useNavigate} from 'react-router-dom';
 import '../App.js';
 
-function SellModal() {
+function SellModal(props) {
+    let navigate = useNavigate();
     let prices = [];
     for (let i = 0; i <= 100; i += 10){
         prices.push(i);
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        let game = await axios.post(`http://localhost:4000/games/sell`, {gameId: 3894, gameName: 'Grand Theft Auto'});
-        console.log(game);
+        try{
+            e.preventDefault();
+            let game = await axios.post(`http://localhost:4000/games/sell`, {username: null, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            condition: e.target.condition.value, location: e.target.location.value});
+            let user = await axios.post(`http://localhost:4000/user/update-user`, {username: null, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            condition: e.target.condition.value, location: e.target.location.value});
+            console.log(game);
+            alert("Your game is now being sold!");
+        }catch(e){
+            alert(e);
+        }
     }
     return (
     <div className="modal fade" id="sellModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -26,7 +35,7 @@ function SellModal() {
             <form onSubmit={(e) => handleSubmit(e)}>
                 <div className="mb-3">
                     <label htmlFor="recipient-name" className="col-form-label">Price for Game:</label>
-                    <select className="form-select" aria-label="Default select example" required>
+                    <select className="form-select" aria-label="Default select example" name='price' required>
                     <option value="">Open this select menu</option>
                     {prices.map((i) => {
                                     return <option key={i}>{'$' + i}</option>
@@ -35,20 +44,20 @@ function SellModal() {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="message-text" className="col-form-label">Condition of Game:</label>
-                    <select className="form-select" aria-label="Default select example" required>
+                    <select className="form-select" aria-label="Default select example" name='condition' required>
                     <option value="">Open this select menu</option>
-                    <option value="1">New</option>
-                    <option value="2">Like New</option>
-                    <option value="3">Fair</option>
+                    <option value="New">New</option>
+                    <option value="Like New">Like New</option>
+                    <option value="Fair">Fair</option>
                     </select>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="recipient-name" className="col-form-label">City:</label>
-                    <input type="text" className="form-control" id="recipient-name" required/>
+                    <input type="text" className="form-control" id="recipient-name" name='location' required/>
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" className="btn btn-primary">List Game</button>
+                    <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">List Game</button>
                 </div>
                 </form>
             </div>

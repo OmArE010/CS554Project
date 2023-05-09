@@ -32,10 +32,9 @@ import SellModal from '../Modals/SellModal';
         async function fetchData() {
         try{
             const {data} = await axios.get(`http://localhost:4000/games/copies/${id}`);
-            setCopies(data._eventsCount);
-            console.log(copies);
+            setCopies(data);
         }catch(e){
-            setError(true)
+            setError(true);
             console.log(e);
         }
         try {
@@ -43,14 +42,13 @@ import SellModal from '../Modals/SellModal';
           window.scroll({top: 0});
           setGameData(data);
           setLoading(false);
-          console.log(data);
         } catch (e) {
           setError(true)
           console.log(e);
         }
       }
       fetchData();
-    }, [id, showSellModal, showBuyModal]);
+    }, [id, showSellModal, showBuyModal, copies]);
 
     const handleOpenModal = () => {
         setShowSellModal(true);
@@ -106,7 +104,7 @@ import SellModal from '../Modals/SellModal';
                         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sellModal">
                             Sell Game
                         </button>
-                        {showSellModal ? <SellModal/> : null}
+                        {showSellModal ? <SellModal gameId={gameData.id} gameName={gameData.name}/> : null}
                         {showBuyModal ? <BuyModal/> : null}
             </div>
             </div>

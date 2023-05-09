@@ -1,3 +1,4 @@
+const {v4: uuidv4} = require('uuid');
 const mongoCollections = require("../config/mongoCollections");
 const usersCollection = mongoCollections.users;
 const bcrypt = require('bcrypt');
@@ -80,17 +81,24 @@ const updateUser = async (username, gameId, gameName, price, condition, location
 	let users = await usersCollection();
 	username = username.toLowerCase().trim();
 	let user = await users.findOne({ username: username });
+	console.log(user);
 	if (!user) throw `User not present`;
 
-	user.gamesSelling.push({
+	let updatedGamesSelling = ({
+		id: uuidv4(),
 		gameId: gameId,
 		gameName: gameName,
 		price: price,
 		condition: condition,
 		location: location
-	})
+	});
+	const updatedInfo = await users.updateOne({username: username}, {$push: {gamesSelling: updatedGamesSelling}});
 
-	return user;
+	if(updatedInfo.modifiedCount === 0 && !updatedInfo.matchedCount){
+		throw "could not update recipe successfully";
+	  }
+
+	return getUser(username);
 }
 
 const getSelling = async(username) => {
