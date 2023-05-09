@@ -72,18 +72,9 @@ import SellModal from '../Modals/SellModal';
       {gameData.background_image ? img = gameData.background_image : img = 'null'}
     return (
         <div>
-            <h1>Game Details</h1>
-            <div>
-                <h2>{gameData.name}</h2>
-                <h3>{gameData.genre}</h3>
-                <h3>{gameData.platform}</h3>
-                <h3>{gameData.releaseDate}</h3>
-                <h3>{gameData.developer}</h3>
-                <h3>{gameData.rating}</h3>
-            </div>
             <div className="card mb-3">
             <div className="card-body">
-            <img src={img} className="card-img-top" alt="..."/>
+            <img src={img} className="card-img-top img-thumbnail" alt="..."/>
                         <div className="card-body">
                             <h5 className="card-title">{gameData.name ? gameData.name : 'No name Available'}</h5>
                             <p className='card-text'>Copies Available: {copies}</p>
@@ -98,14 +89,14 @@ import SellModal from '../Modals/SellModal';
                                 <li className="list-group-item">{gameData.website ? <Link to={gameData.website}> Game Website </Link> : 'No Website Link'}</li>
                             </ul>
                         </div>
-                        <button type="button" className="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" className="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#buyModal">
                             Buy Game
                         </button>
                         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sellModal">
                             Sell Game
                         </button>
                         {showSellModal ? <SellModal gameId={gameData.id} gameName={gameData.name}/> : null}
-                        {showBuyModal ? <BuyModal/> : null}
+                        {showBuyModal ? <BuyModal gameId={gameData.id} gameName={gameData.name}/> : null}
             </div>
             </div>
         </div>
