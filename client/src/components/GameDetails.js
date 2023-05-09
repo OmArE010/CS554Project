@@ -9,10 +9,12 @@ import {
     Typography,
     CardHeader
   } from '@mui/material';
+import BuyModal from '../Modals/BuyModal';
 import SellModal from '../Modals/SellModal';
 
   const GameDetails = (props) => {
     const [showSellModal, setShowSellModal] = useState(false);
+    const [showBuyModal, setBuyModal] = useState(false);
     const [gameData, setGameData] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -26,6 +28,7 @@ import SellModal from '../Modals/SellModal';
         console.log(id);
         console.log('SHOW useEffect fired');
         setShowSellModal(true);
+        setBuyModal(true);
         async function fetchData() {
         try{
             const {data} = await axios.get(`http://localhost:4000/games/copies/${id}`);
@@ -47,7 +50,7 @@ import SellModal from '../Modals/SellModal';
         }
       }
       fetchData();
-    }, [id, showSellModal]);
+    }, [id, showSellModal, showBuyModal]);
 
     const handleOpenModal = () => {
         setShowSellModal(true);
@@ -104,6 +107,7 @@ import SellModal from '../Modals/SellModal';
                             Sell Game
                         </button>
                         {showSellModal ? <SellModal/> : null}
+                        {showBuyModal ? <BuyModal/> : null}
             </div>
             </div>
         </div>
