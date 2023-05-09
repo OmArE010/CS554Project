@@ -5,31 +5,46 @@ import "../App.js";
 import { useSelector } from "react-redux";
 
 function SellModal(props) {
-    const user = useSelector((state) => state.user);
-    const [error, setError] = useState(false);
-    let navigate = useNavigate();
-    let prices = [];
-    for (let i = 0; i <= 100; i += 10){
-        prices.push(i);
-    }
+  const currentUser = useSelector((state) => state.user);
+  const [error, setError] = useState(false);
+  let navigate = useNavigate();
+  let prices = [];
+  for (let i = 0; i <= 100; i += 10) {
+    prices.push(i);
+  }
 
-    const handleSubmit = async (e) => {
-        try{
-          if (user.loggedIn) {
-            e.preventDefault();
-            let game = await axios.post(`http://localhost:4000/games/sell`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
-            condition: e.target.condition.value, location: e.target.location.value});
-            let user = await axios.post(`http://localhost:4000/user/update-user`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
-            condition: e.target.condition.value, location: e.target.location.value});
-            console.log(game);
-            alert("Your game is now being sold!");
-            }else {
-                setError(true);
-                navigate(`/login`);
-            }
-        }catch(e){
-            alert(e);
-        }
+  const handleSubmit = async (e) => {
+    try {
+      if (currentUser.loggedIn) {
+        e.preventDefault();
+        console.log("before game");
+        let game = await axios.post(`http://localhost:4000/games/sell`, {
+          username: currentUser.username,
+          gameId: props.gameId,
+          gameName: props.gameName,
+          price: e.target.price.value,
+          condition: e.target.condition.value,
+          location: e.target.location.value,
+        });
+        console.log("after game");
+        let user = await axios.post(`http://localhost:4000/user/update-user`, {
+          username: currentUser.username,
+          gameId: props.gameId,
+          gameName: props.gameName,
+          price: e.target.price.value,
+          condition: e.target.condition.value,
+          location: e.target.location.value,
+        });
+        console.log("after user");
+        console.log(game);
+        alert("Your game is now being sold!");
+      } else {
+        setError(true);
+        navigate(`/login`);
+      }
+    } catch (e) {
+      alert(e);
+    }
   };
 
   return (
@@ -42,7 +57,7 @@ function SellModal(props) {
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          {!user.loggedIn && (
+          {!currentUser.loggedIn && (
             <div
               class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 "
               role="alert"
@@ -53,7 +68,7 @@ function SellModal(props) {
           )}
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              Sell Your Game! {user.loggedIn}
+              Sell Your Game! {currentUser.loggedIn}
             </h1>
             <button
               type="button"
