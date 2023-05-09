@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 function SellModal(props) {
     const user = useSelector((state) => state.user);
+    console.log(user.username);
     const [error, setError] = useState(false);
     let navigate = useNavigate();
     let prices = [];
@@ -17,19 +18,20 @@ function SellModal(props) {
         try{
           if (user.loggedIn) {
             e.preventDefault();
-            let game = await axios.post(`http://localhost:4000/games/sell`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            let game = await axios.post(`http://localhost:4000/games/sell`, {username: user.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
             condition: e.target.condition.value, location: e.target.location.value});
-            let user = await axios.post(`http://localhost:4000/user/update-user`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            let userUpdate = await axios.post(`http://localhost:4000/update-user`, {username: user.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
             condition: e.target.condition.value, location: e.target.location.value});
             console.log(game);
             alert("Your game is now being sold!");
-          }else {
-            setError(true);
-            navigate(`/login`);
+            }else {
+                alert("Must be logged in to list a game");
+                setError(true);
+                navigate(`/login`);
+            }
         }catch(e){
             alert(e);
         }
-    }
   };
 
   return (
@@ -71,6 +73,7 @@ function SellModal(props) {
                 <select
                   className="form-select"
                   aria-label="Default select example"
+                  name="price"
                   required
                 >
                   <option value="">Open this select menu</option>
@@ -86,12 +89,13 @@ function SellModal(props) {
                 <select
                   className="form-select"
                   aria-label="Default select example"
+                  name="condition"
                   required
                 >
                   <option value="">Open this select menu</option>
-                  <option value="1">New</option>
-                  <option value="2">Like New</option>
-                  <option value="3">Fair</option>
+                  <option value="New">New</option>
+                  <option value="Like New">Like New</option>
+                  <option value="Fair">Fair</option>
                 </select>
               </div>
               <div className="mb-3">
@@ -102,6 +106,7 @@ function SellModal(props) {
                   type="text"
                   className="form-control"
                   id="recipient-name"
+                  name="location"
                   required
                 />
               </div>

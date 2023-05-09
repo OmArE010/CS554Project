@@ -15,18 +15,21 @@ import SignUp from "./components/SignUp";
 import Searching from "./components/Searching";
 import Search from "./components/Search";
 import Messages from "./components/Messages";
+import Selling from "./components/Selling";
 import { useSession } from "react-session";
 import { useDispatch, useSelector } from "react-redux";
 import store from "./store";
+import actions from './actions';
 
 function App() {
+  let dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   console.log(user);
   return (
     <Router>
       <div className="App">
         <header className="App-header">
-          <nav className="lg bg-body-tertiary">
+          {/* <nav className="lg bg-body-tertiary">
             <div className="flex items-center mr-4">
               <NavLink
                 to="/games/1"
@@ -114,9 +117,9 @@ function App() {
               </div>
               <Searching />
             </div>
-          </nav>
+          </nav> */}
 
-          {/* <nav className="navbar navbar-expand-lg bg-body-tertiary">
+          <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
               <NavLink className="navbar-brand" to="/games/1">
                 GAMIFY
@@ -136,18 +139,18 @@ function App() {
               <div className="navbar-collapse" id="navbarText">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                   <li className="nav-item">
-                    <a
+                    <NavLink
                       className="nav-link active"
                       aria-current="page"
-                      href="/games/1"
+                      to="/games/1"
                     >
                       Home
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      Selling
-                    </a>
+                  {user.loggedIn ? <NavLink className="nav-link active" to="/selling">
+                  Selling
+                </NavLink> : null}
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#">
@@ -155,20 +158,27 @@ function App() {
                     </a>
                   </li>
                 </ul>
-
-                <NavLink className="navlink" to="/messages">
+                {user.loggedIn ? <NavLink className="navlink" to="/messages">
                   Messages
-                </NavLink>
-                <NavLink className="navlink" to="/login" hidden={user.loggedIn}>
+                </NavLink> : null}
+                {!user.loggedIn ? <NavLink className="navlink" to="/login">
                   Login
-                </NavLink>
-                <NavLink className="navlink" to="/signup">
+                </NavLink> : null}
+                {!user.loggedIn ? <NavLink className="navlink" to="/signup">
                   Sign Up
-                </NavLink>
+                </NavLink> : null}
+                {user.loggedIn ? <button className="navlink" onClick={() => {dispatch(actions.setUser(
+                  user.username,
+                  user.firstname,
+                  user.lastname,
+                  user.password,
+                  user.gamesSelling,
+                  false
+                )); alert('You have been logged out.')}}>LogOut</button> : null}
               </div>
               <Searching />
             </div>
-          </nav> */}
+          </nav>
           <br />
           <h1 className="App-title">Gamify</h1>
           <h2 className="text-white">Your home for games</h2>
@@ -183,6 +193,7 @@ function App() {
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/search/:page/:search" element={<Search />} />
           <Route exact path="/messages" element={<Messages />} />
+          <Route exact path="/selling" element={<Selling />} />
         </Routes>
       </div>
     </Router>

@@ -138,4 +138,13 @@ router
         let info = await users.getPrices(req.params.username, req.params.gameId);
         res.status(200).json(info);
     })
+
+router
+    .route('/selling/:username')
+    .get(async (req, res) => {
+        console.log("hi");
+        console.log(req.params.username);
+        let info = await users.getSelling(req.params.username);
+        res.status(200).json(info);
+    })
 module.exports = router;

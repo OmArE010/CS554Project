@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import '../App.js';
+import { useSelector } from "react-redux";
 
 
 function BuyModal(props) {
     const[prices, setPrices] = useState(undefined);
+    const user = useSelector((state) => state.user);
+    const [error, setError] = useState(undefined);
+    const navigate = useNavigate();
     //let prices;
 
     useEffect(() => {
         const fetchData = async () => {
             try{
-                const { data } = await axios.get(`http://localhost:4000/user/get-prices/${props.username}/${props.gameId}`);
+                const { data } = await axios.get(`http://localhost:4000/get-prices/${user.username}/${props.gameId}`);
                 console.log(data);
                 setPrices(data);
                 console.log(prices);
@@ -23,20 +27,18 @@ function BuyModal(props) {
       }, []);
 
       console.log(Array.isArray(prices));
-    // const getData = async () => {
-    //     let { data } = await axios.get(`http://localhost:4000/user/get-prices/omare/${props.gameId}`);
-    //     //setPrices(data);
-    //     prices = data;
-    //     console.log('price: ' + prices);
-    // }
 
     const handleSubmit = async (e) => {
         try{
             e.preventDefault();
-            // let game = await axios.post(`http://localhost:4000/games/sell`, );
-            // let user = await axios.post(`http://localhost:4000/user/update-user`, );
-            //console.log(game);
-            alert("Your game is now being sold!");
+            if (user.loggedIn) {
+                alert("Your have purchased your game!");
+            }
+            else{
+                alert("Must be logged in to list a game");
+                setError(true);
+                navigate(`/login`);
+            }
         }catch(e){
             alert(e);
         }
@@ -66,8 +68,8 @@ function BuyModal(props) {
                         <br></br>
                         <br></br>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal"> Cancel</button>
-                            <button type="button" className="btn btn-primary">Confirm</button>
+                            <button className="btn btn-secondary" data-bs-dismiss="modal"> Cancel</button>
+                            <button className="btn btn-primary">Confirm</button>
                         </div>
                         </form>
                         </div>
