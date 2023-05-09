@@ -30,7 +30,7 @@ const searchGame = async (page, searchTerm) => {
     return data;
 }
 
-const createSellingGame = async (gameId, gameName) => {
+const createSellingGame = async (username, gameId, gameName, price, condition, location) => {
 
     console.log(gameId, gameName);
 
@@ -39,9 +39,12 @@ const createSellingGame = async (gameId, gameName) => {
     //username = username.toLowerCase().trim();
 
     let newGame = {
+        username: username,
 		gameId: gameId,
-        // username: username,
         gameName: gameName,
+        price: price,
+        condition: condition,
+        location: location
 	};
 
 	let insertInfo = await games.insertOne(newGame);
@@ -56,13 +59,22 @@ const createSellingGame = async (gameId, gameName) => {
 const getCopies = async (gameId) => {
 
     let games = await gamesCollection();
-    let count = 0;
-    let copies = games.find({gameId: gameId});
+    let copies = await games.count({gameId: Number(gameId)});
     if(!copies){
-        console.log('not found');
         return 0;
     }
     return copies;
+
+}
+
+const deleteBuyGame = async (gameId) => {
+    let games = await gamesCollection();
+    let deleteInfo = await games.deleteOne(gameId);
+    if (deleteInfo.deletedCount === 0) {
+        throw `Server Error, User Could not be Created`;
+    } else {
+        return { gameDeleted: true };
+    }
 
 }
 
@@ -71,5 +83,6 @@ module.exports = {
     getGame,
     searchGame,
     createSellingGame,
-    getCopies
+    getCopies,
+	deleteBuyGame
 }

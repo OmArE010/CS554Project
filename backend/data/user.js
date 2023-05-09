@@ -1,3 +1,4 @@
+const {v4: uuidv4} = require('uuid');
 const mongoCollections = require("../config/mongoCollections");
 const usersCollection = mongoCollections.users;
 const bcrypt = require('bcrypt');
@@ -81,17 +82,24 @@ const updateUser = async (username, gameId, gameName, price, condition, location
 	let users = await usersCollection();
 	username = username.toLowerCase().trim();
 	let user = await users.findOne({ username: username });
+	console.log(user);
 	if (!user) throw `User not present`;
 
-	user.gamesSelling.push({
+	let updatedGamesSelling = ({
+		id: uuidv4(),
 		gameId: gameId,
 		gameName: gameName,
 		price: price,
 		condition: condition,
 		location: location
-	})
+	});
+	const updatedInfo = await users.updateOne({username: username}, {$push: {gamesSelling: updatedGamesSelling}});
 
-	return user;
+	if(updatedInfo.modifiedCount === 0 && !updatedInfo.matchedCount){
+		throw "could not update recipe successfully";
+	  }
+
+	return getUser(username);
 }
 
 const getSelling = async(username) => {
@@ -102,10 +110,26 @@ const getSelling = async(username) => {
 	return user.gamesSelling;
 }
 
+const getPrices = async(username, gameId) => {
+	let prices = [];
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	username = username.toLowerCase().trim();
+	let user = await users.findOne({username: username});
+	for (let i = 0; i < user.gamesSelling.length; i ++){
+		if(user.gamesSelling[i].gameId == gameId){
+			//prices[user.gamesSelling[i].id] = [user.gamesSelling[i].gameName, user.gamesSelling[i].price];
+			prices.push({seller: username, id: user.gamesSelling[i].id, name: user.gamesSelling[i].gameName, price: user.gamesSelling[i].price});
+		}
+	}
+	return prices;
+}
+
 module.exports = {
     createUser, 
     validateUser, 
     getUser,
 	updateUser,
-	getSelling
+	getSelling,
+	getPrices
 }

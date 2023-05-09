@@ -4,28 +4,31 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import "../App.js";
 import { useSelector } from "react-redux";
 
-function SellModal() {
-  const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const [error, setError] = useState(false);
-  let prices = [];
-  for (let i = 0; i <= 100; i += 10) {
-    prices.push(i);
-  }
+function SellModal(props) {
+    const user = useSelector((state) => state.user);
+    const [error, setError] = useState(false);
+    let navigate = useNavigate();
+    let prices = [];
+    for (let i = 0; i <= 100; i += 10){
+        prices.push(i);
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (user.loggedIn) {
-      let game = await axios.post(`http://localhost:4000/games/sell`, {
-        gameId: 3894,
-        gameName: "Grand Theft Auto",
-      });
-    } else {
-      setError(true);
-      navigate(`/login`);
-      //   navigate(`/login`, {
-      //     error: { message: "Must be logged in to list a game!" },
-      //   });
+    const handleSubmit = async (e) => {
+        try{
+          if (user.loggedIn) {
+            e.preventDefault();
+            let game = await axios.post(`http://localhost:4000/games/sell`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            condition: e.target.condition.value, location: e.target.location.value});
+            let user = await axios.post(`http://localhost:4000/user/update-user`, {username: props.username, gameId: props.gameId, gameName: props.gameName, price: e.target.price.value, 
+            condition: e.target.condition.value, location: e.target.location.value});
+            console.log(game);
+            alert("Your game is now being sold!");
+          }else {
+            setError(true);
+            navigate(`/login`);
+        }catch(e){
+            alert(e);
+        }
     }
   };
 
@@ -121,6 +124,35 @@ function SellModal() {
             </form>
           </div>
           {/* <div className="modal-footer">
+                <div className="mb-3">
+                    <label htmlFor="recipient-name" className="col-form-label">Price for Game:</label>
+                    <select className="form-select" aria-label="Default select example" name='price' required>
+                    <option value="">Open this select menu</option>
+                    {prices.map((i) => {
+                                    return <option key={i}>{'$' + i}</option>
+                                })}
+                    </select>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="message-text" className="col-form-label">Condition of Game:</label>
+                    <select className="form-select" aria-label="Default select example" name='condition' required>
+                    <option value="">Open this select menu</option>
+                    <option value="New">New</option>
+                    <option value="Like New">Like New</option>
+                    <option value="Fair">Fair</option>
+                    </select>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="recipient-name" className="col-form-label">City:</label>
+                    <input type="text" className="form-control" id="recipient-name" name='location' required/>
+                </div>
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">List Game</button>
+                </div>
+                </form>
+            </div>
+            <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" className="btn btn-primary">List Game</button>
             </div> */}

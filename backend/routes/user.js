@@ -9,10 +9,27 @@ const users = data.userData;
 const games = data.gameData;
 router.use(express.urlencoded({extended: true}));
 
-router.route('/login').get(async (req, res) => {
-    if (req.session.user) return res.redirect("/private");
-    return res.render("login_page");
-  });
+// router.route('/').get(async (req, res) => {
+//     if (req.session.user) return res.redirect("/private");
+//     return res.render("login_page");
+//   });
+  
+router
+    .route('/login')
+    .post(async (req, res) => {
+        console.log('here');
+        try {
+            const { username, password } = req.body;
+            const user = await users.validateUser(username, password);
+            if (user) {
+                //req.session.user = user;
+                return res.status(200).json(user);
+            }
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({error: e});
+        }
+    });
 
 router.route("/login").post(async (req, res) => {
   try {
@@ -28,40 +45,36 @@ router.route("/login").post(async (req, res) => {
   }
 });
 
-router.route("/logout").get(async (req, res) => {});
 
-router.post("/signup", async (req, res) => {
-  try {
-    const { firstname, lastname, username, password } = req.body;
-    console.log(`req.body: ${ firstname, lastname, username, password }`)
-    const newUser = await users.createUser(
-      firstname,
-      lastname,
-      username,
-      password
-    );
-    req.session.user = newUser;
-    res.redirect("/");
-  } catch (e) {
-    return res.status(500).json({ error: e });
-  }
-});
-
-// router
-//     .post(async (req, res) => {
-//     try {
-//       const { username, password } = req.body;
-//       const user = await users.getUserByUsername(username);
-//       if (user && user.password === password) {
-//         req.session.user = user;
-//         return res.redirect("/private");
-//       }
-//       return res.render("login_page", { error: "Invalid username/password" });
-//     } catch (e) {
-//       return res.status(500).render("login_page", { error: e });
-//     }
-
-//   });
+// router.post("/signup", async (req, res) => {
+//   try {
+//     const { firstname, lastname, username, password } = req.body;
+//     console.log(`req.body: ${ firstname, lastname, username, password }`)
+//     const newUser = await users.createUser(
+//       firstname,
+//       lastname,
+//       username,
+//       password
+//     );
+//     req.session.user = newUser;
+//     res.redirect("/");
+//   } catch (e) {
+//     return res.status(500).json({ error: e });
+//   }
+// });
+router
+    .route('/signup')
+    .post(async (req, res) => {
+        try {
+            const { firstname, lastname, username, password } = req.body;
+            const newUser = await users.createUser(firstname, lastname, username, password);
+            //req.session.user = newUser;
+            console.log(newUser);
+            return newUser;
+          } catch (e) {
+            return res.status(500).json({ error: e});
+          }
+    });
 
 router.route("/logout").get(async (req, res) => {
   req.session.destroy();
@@ -102,14 +115,27 @@ router.route("/private").get(async (req, res) => {
     return res.render("private_page", { user: user, games: gameList });
 });
 
-router.route("/private").post(async (req, res) => {
-    const user = req.session.user;
-    const game = await games.getGameById(req.body.gameId);
-    const gameList = user.games;
-    gameList.push(game._id);
-    const updatedUser = await users.updateUser(user._id, user.username, user.password, user.email, gameList);
-    req.session.user = updatedUser;
-    return res.redirect("/private");
-});
+// router.route("/private").post(async (req, res) => {
+//     const user = req.session.user;
+//     const game = await games.getGameById(req.body.gameId);
+//     const gameList = user.games;
+//     gameList.push(game._id);
+//     const updatedUser = await users.updateUser(user._id, user.username, user.password, user.email, gameList);
+//     req.session.user = updatedUser;
+//     return res.redirect("/private");
+// });
 
+router
+    .route('/update-user')
+    .post(async (req, res) => {
+        let info = await users.updateUser(req.body.username, req.body.gameId, req.body.gameName, req.body.price, req.body.condition, req.body.location);
+        res.status(200).json(info);
+    })
+
+router
+    .route('/get-prices/:username/:gameId')
+    .get(async (req, res) => {
+        let info = await users.getPrices(req.params.username, req.params.gameId);
+        res.status(200).json(info);
+    })
 module.exports = router;
