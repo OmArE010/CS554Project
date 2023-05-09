@@ -66,10 +66,22 @@ const getCopies = async (gameId) => {
 
 }
 
+const deleteBuyGame = async (gameId) => {
+    let games = await gamesCollection();
+    let deleteInfo = await games.deleteOne(gameId);
+    if (deleteInfo.deletedCount === 0) {
+        throw `Server Error, User Could not be Created`;
+    } else {
+        return { gameDeleted: true };
+    }
+
+}
+
 module.exports = {
     getGames,
     getGame,
     searchGame,
     createSellingGame,
-    getCopies
+    getCopies,
+	deleteBuyGame
 }
