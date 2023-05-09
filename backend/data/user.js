@@ -56,10 +56,11 @@ const validateUser = async (username, password) => {
     let users = await usersCollection();
     username = username.toLowerCase();
 	let user = await users.findOne({ username: username });
+	// console.log(user);
 	if (!user) throw `Either the username or password is invalid`;
 
 	if (await bcrypt.compare(password, user.password)) {
-		return { authenticatedUser: true, username: user.username  };
+		return user;
 	} else {
 		throw `Either the username or password is invalid`;
 	}
