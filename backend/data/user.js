@@ -106,7 +106,8 @@ const getSelling = async(username) => {
 	validation.errorIfNotProperUserName(username, "username");
 	let users = await usersCollection();
 	username = username.toLowerCase().trim();
-	let user = users.findOne({username: username});
+	let user = await users.findOne({username: username});
+	console.log(user);
 	return user.gamesSelling;
 }
 

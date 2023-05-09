@@ -122,10 +122,10 @@ import SellModal from '../Modals/SellModal';
                                 <li className="list-group-item">{gameData.website ? <Link to={gameData.website}> Game Website </Link> : 'No Website Link'}</li>
                             </ul>
                         </div>
-                        <button type="button" className="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#buyModal">
+                        <button className="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#buyModal">
                             Buy Game
                         </button>
-                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sellModal">
+                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sellModal">
                             Sell Game
                         </button>
                         {showSellModal ? <SellModal gameId={gameData.id} gameName={gameData.name}/> : null}
