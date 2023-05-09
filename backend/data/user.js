@@ -125,11 +125,25 @@ const getPrices = async(username, gameId) => {
 	return prices;
 }
 
+//delete game from selling
+const deletesellingGame = async (username, gameId) => {
+	console.log(username, gameId);
+	validation.errorIfNotProperUserName(username, "username");
+	let users = await usersCollection();
+	let usersellingid = await users.findOne({"newUser.gamesSelling": gameId});
+	if(!userselling){
+		throw `game not found`;
+	}
+	let deleteuser =  user.deleteOne(usersellingid);
+}
+
 module.exports = {
     createUser, 
     validateUser, 
     getUser,
 	updateUser,
 	getSelling,
-	getPrices
+	getPrices,
+	deletesellingGame
+	
 }
