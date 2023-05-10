@@ -3,6 +3,7 @@ const usersCollection = mongoCollections.users;
 const gamesCollection = mongoCollections.games;
 const validation = require('../validation');
 const axios = require('axios');
+var ObjectId = require('mongodb').ObjectId;
 
 const key = 'b717f19a81194b02b32bc29213664efd';
 
@@ -69,7 +70,8 @@ const getCopies = async (gameId) => {
 
 const deleteBuyGame = async (gameId) => {
     let games = await gamesCollection();
-    let deleteInfo = await games.deleteOne(gameId);
+    console.log(gameId);
+    let deleteInfo = await games.deleteOne({_id:new ObjectId(gameId.id)});
     if (deleteInfo.deletedCount === 0) {
         throw `Server Error, User Could not be Created`;
     } else {

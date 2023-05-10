@@ -82,5 +82,13 @@ router
         res.status(200).json(info);
     })
 
+router
+    .route('/buy')
+    .post(async (req, res) => {
+        console.log(req.body);
+        let info = await games.deleteBuyGame(req.body.id);
+        res.status(200).json(info);
+    })
+
 
 module.exports = router;

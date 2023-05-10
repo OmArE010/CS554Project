@@ -12,6 +12,7 @@ function BuyModal(props) {
   const socketRef = useRef();
   const [sendTo, setSendTo] = useState("");
   const [error, setError] = useState(false);
+  const [seller2, setSeller2] = useState(undefined);
 
   const [prices, setPrices] = useState(undefined);
   //let prices;
@@ -72,10 +73,9 @@ function BuyModal(props) {
     try {
       e.preventDefault();
       if (currentUser.loggedIn) {
-        // let game = await axios.post(`http://localhost:4000/games/sell`, );
-        // let user = await axios.post(`http://localhost:4000/user/update-user`, );
-        //console.log(game);
-        alert("Your game is now being sold!");
+        // console.log(e.target.condition);
+        // let game = await axios.post(`http://localhost:4000/buy-game`, {username: sendTo, gameId: e.target.condition.value});
+        alert("Your have bought your game!");
       } else {
         navigate(`/login`);
       }
@@ -133,7 +133,7 @@ function BuyModal(props) {
                   {prices
                     ? prices.map((i) => {
                         return (
-                         i.seller !== currentUser.username ? <option key={i.id}>
+                         i.seller !== currentUser.username ? <option key={i.id} value={i.id}>
                             {i.seller + " -" + i.price}
                           </option> : null
                         );
@@ -174,8 +174,9 @@ function BuyModal(props) {
                   Cancel
                 </button>
                 <button
-                  type="button"
+                  type="submit"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none"
+                  data-bs-dismiss="modal"
                 >
                   Confirm
                 </button>

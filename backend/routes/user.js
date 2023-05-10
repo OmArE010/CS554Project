@@ -168,4 +168,13 @@ router
         let info = await users.getSellersforgame(req.params.gameId);
         res.status(200).json(info);
     })
+
+router
+    .route('/buy-game')
+    .post(async (req, res) => {
+        console.log("hi");
+        console.log(req.params.gameId);
+        let info = await users.deletesellingGame(req.body.username, req.body.gameId);
+        res.status(200).json(info);
+    })
 module.exports = router;
