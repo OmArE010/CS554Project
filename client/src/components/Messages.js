@@ -28,10 +28,23 @@ function Messages() {
         const allUsers = [];
         data.map(({ sender, message, receiver }, index) => {
           if (sender.username === state.sender.username) {
-            if (!allUsers.includes(receiver)) allUsers.push(receiver);
+            let x = false;
+            for (let i=0; i<allUsers.length; i++) {
+              if (String(allUsers[i].username)===String(receiver.username)) {
+                x=true;
+                console.log(receiver.username, allUsers[i].username);
+              } 
+            }
+            if (!x) {
+              allUsers.push(receiver);
+            }
           }
           if (receiver.username === state.sender.username) {
-            if (!allUsers.includes(sender)) allUsers.push(sender);
+            let x = false;
+            for (let i=0; i<allUsers.length; i++) {
+              if (String(allUsers[i].username)===String(sender.username)) x=true;
+            }
+            if (!x) allUsers.push(sender);
           }
         });
         setLoading(false);
@@ -127,7 +140,7 @@ function Messages() {
           <div key={index}>
             {!sameSender && sender.username !== state.sender.username && (
               <h3 className="chat-name">
-                {sender.firstname} {sender.lastname}
+                {sender.firstname.charAt(0).toUpperCase() + sender.firstname.slice(1)} {sender.lastname.charAt(0).toUpperCase() + sender.lastname.slice(1)}
               </h3>
             )}
             <span
@@ -208,7 +221,7 @@ function Messages() {
               </div>
               <form className="send-box bottom-0" onSubmit={onMessageSubmit}>
                 <div>
-                  <label for="message" className="message-label">
+                  <label for="message" className="message-label hidden">
                     Type a message
                   </label>
                   <input

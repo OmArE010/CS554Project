@@ -21,7 +21,7 @@ function BuyModal(props) {
     const fetchData = async () => {
       try {
         // const { data } = await axios.get(
-        //   `http://localhost:4000/user/get-prices/${props.username}/${props.gameId}`
+        //   `http://localhost:4000/get-prices/${props.username}/${props.gameId}`
         // );
         // console.log(data);
         // setPrices(data);
@@ -37,12 +37,12 @@ function BuyModal(props) {
   }, []);
 
   console.log(Array.isArray(prices));
-  // const getData = async () => {
-  //     let { data } = await axios.get(`http://localhost:4000/user/get-prices/omare/${props.gameId}`);
-  //     //setPrices(data);
-  //     prices = data;
-  //     console.log('price: ' + prices);
-  // }
+//   const getData = async () => {
+//       let { data } = await axios.get(`http://localhost:4000/user/get-prices/omare/${props.gameId}`);
+//       setPrices(data);
+//       prices = data;
+//       console.log('price: ' + prices);
+//   }
   const onMessageSubmit = async (e) => {
     try {
       e.preventDefault();
