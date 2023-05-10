@@ -152,11 +152,6 @@ function App() {
                   Selling
                 </NavLink> : null}
                   </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      Pricing
-                    </a>
-                  </li>
                 </ul>
                 {user.loggedIn ? <NavLink className="navlink" to="/messages">
                   Messages
