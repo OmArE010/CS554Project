@@ -3,6 +3,7 @@ const mongoCollections = require("../config/mongoCollections");
 const usersCollection = mongoCollections.users;
 const bcrypt = require("bcrypt");
 const validation = require("../validation");
+var ObjectId = require('mongodb').ObjectId;
 
 const saltRounds = 4;
 
@@ -179,13 +180,13 @@ const getPrices = async(username, gameId) => {
 //delete game from selling
 const deletesellingGame = async (username, gameId) => {
 	console.log(username, gameId);
-	validation.errorIfNotProperUserName(username, "username");
+	//validation.errorIfNotProperUserName(username, "username");
 	let users = await usersCollection();
-	let usersellingid = await users.findOne({"newUser.gamesSelling": gameId});
-	if(!userselling){
-		throw `game not found`;
-	}
-	let deleteuser =  user.deleteOne(usersellingid);
+	// let usersellingid = await users.findOne({"newUser.gamesSelling": gameId});
+	// if(!usersellingid){
+	// 	throw `game not found`;
+	// }
+	let deleteuser =  users.updateOne({username: username}, {$pull: {gameSelling: {_id:new ObjectId(gameId)}}});
 }
 
 module.exports = {
