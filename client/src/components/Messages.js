@@ -200,7 +200,7 @@ function Messages() {
                             : "users-list"
                         }
                       >
-                        {user.firstname} {user.lastname}
+                        {user.firstname.charAt(0).toUpperCase() + user.firstname.slice(1)} {user.lastname.charAt(0).toUpperCase() + user.lastname.slice(1)}
                       </button>
                     </div>
                   ))
