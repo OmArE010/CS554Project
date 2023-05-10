@@ -20,12 +20,23 @@ function BuyModal(props) {
     socketRef.current = io("/");
     const fetchData = async () => {
       try {
-        // const { data } = await axios.get(
-        //   `http://localhost:4000/user/get-prices/${props.username}/${props.gameId}`
-        // );
-        // console.log(data);
-        // setPrices(data);
-        // console.log(prices);
+        let { data } = await axios.get(`http://localhost:4000/get-seller/${props.gameId}`);
+        data = data.flat(1);
+        let data2 = data;
+        console.log(data);
+
+
+        // for(let i = 0; i < data2.length; i ++){
+        //     console.log(i);
+        //     console.log(data[i]);
+        //     if(data[i].seller == 'omare'){
+        //         data.splice(data[i], 1); 
+        //     }
+        // }
+
+        setPrices(data);
+
+
       } catch (e) {
         console.log(e);
       }
@@ -34,15 +45,10 @@ function BuyModal(props) {
     return () => {
       socketRef.current.disconnect();
     };
-  }, []);
+  }, [props.gameId]);
 
-  console.log(Array.isArray(prices));
-  // const getData = async () => {
-  //     let { data } = await axios.get(`http://localhost:4000/user/get-prices/omare/${props.gameId}`);
-  //     //setPrices(data);
-  //     prices = data;
-  //     console.log('price: ' + prices);
-  // }
+  console.log(prices);
+
   const onMessageSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -129,9 +135,9 @@ function BuyModal(props) {
                   {prices
                     ? prices.map((i) => {
                         return (
-                          <option key={i.id}>
+                         i.seller !== currentUser.username ? <option key={i.id}>
                             {i.seller + " -" + i.price}
-                          </option>
+                          </option> : null
                         );
                       })
                     : null}
