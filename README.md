@@ -14,4 +14,26 @@ After the npm installs lease do npm run seed, The seed file will contain a usern
 
 Now you will be able to see the site, please login with whichever username/password and explore the site. 
 
+Step 1:
+```git clone https://github.com/OmArE010/CS554Project.git```
+
+Step 2:
+In the backed:
+```npm i```
+
+and on the client side:
+```npm i```
+
+Step 3:
+in the backend:
+```redis-server```
+
+Step 4:
+in the backend:
+```npm run seed```
+
+Step 5:
+in both the backend and client side:
+```npm start```
+
 
