@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import "../App.css";
+import { useSelector } from "react-redux";
 
 function Messages() {
-  const [state, setState] = useState({ message: "", sender: "" });
+  const user = useSelector((state) => state.user);
+  const [state, setState] = useState({ message: "", sender: user });
   const [chat, setChat] = useState([]);
   const [sendTo, setSendTo] = useState("");
   const [users, setUsers] = useState([]);
@@ -23,13 +25,12 @@ function Messages() {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`http://localhost:4000/messages`);
-        console.log(data);
         const allUsers = [];
         data.map(({ sender, message, receiver }, index) => {
-          if (sender === state.sender) {
+          if (sender.username === state.sender.username) {
             if (!allUsers.includes(receiver)) allUsers.push(receiver);
           }
-          if (receiver === state.sender) {
+          if (receiver.username === state.sender.username) {
             if (!allUsers.includes(sender)) allUsers.push(sender);
           }
         });
@@ -54,7 +55,7 @@ function Messages() {
   useEffect(() => {
     socketRef.current.on("message", ({ sender, message, receiver }) => {
       setChat([...chat, { sender, message, receiver }]);
-      if (receiver === state.sender) {
+      if (receiver.username === state.sender.username) {
         if (!users.includes(sender)) setUsers([...users, sender]);
       }
     });
@@ -115,19 +116,25 @@ function Messages() {
     let prevSender = null;
     return chat.map(({ sender, message, receiver }, index) => {
       if (
-        (sender === state.sender || receiver === state.sender) &&
-        (sender === sendTo || receiver === sendTo)
+        (sender.username === state.sender.username ||
+          receiver.username === state.sender.username) &&
+        (sender.username === sendTo.username ||
+          receiver.username === sendTo.username)
       ) {
-        const sameSender = prevSender === sender;
-        prevSender = sender;
+        const sameSender = prevSender === sender.username;
+        prevSender = sender.username;
         return (
           <div key={index}>
-            {!sameSender && sender !== state.sender && (
-              <h3 className="chat-name">{sender}</h3>
+            {!sameSender && sender.username !== state.sender.username && (
+              <h3 className="chat-name">
+                {sender.firstname} {sender.lastname}
+              </h3>
             )}
             <span
               className={
-                sender === state.sender ? "chat-message self" : "chat-message"
+                sender.username === state.sender.username
+                  ? "chat-message self"
+                  : "chat-message"
               }
             >
               {message}
@@ -163,17 +170,6 @@ function Messages() {
             <h2>Messages</h2>
             <div className="messages-list">
               <div className="messages-users">
-                <div>
-                  <button
-                    onClick={() => {
-                      setSendTo("Johnny");
-                    }}
-                    className="users-list"
-                  >
-                    Johnny
-                  </button>
-                </div>
-
                 {users.length === 0 ? (
                   <div>
                     <p>No one to message</p>
@@ -186,10 +182,12 @@ function Messages() {
                           setSendTo(user);
                         }}
                         className={
-                          sendTo === user ? "messages-selected" : "users-list"
+                          sendTo.username === user.username
+                            ? "messages-selected"
+                            : "users-list"
                         }
                       >
-                        {user}
+                        {user.firstname} {user.lastname}
                       </button>
                     </div>
                   ))
@@ -201,12 +199,14 @@ function Messages() {
             <div className="render-chat">
               <div className="room-chat">
                 <p className="room-chat-to">To: </p>
-                <span className="room-chat-name">{sendTo}</span>
+                <span className="room-chat-name">
+                  {sendTo.firstname} {sendTo.lastname}
+                </span>
               </div>
               <div className="chat-log" ref={chatLogRef}>
                 {renderChat()}
               </div>
-              <form className="send-box" onSubmit={onMessageSubmit}>
+              <form className="send-box bottom-0" onSubmit={onMessageSubmit}>
                 <div>
                   <label for="message" className="message-label">
                     Type a message
@@ -223,33 +223,6 @@ function Messages() {
             </div>
           </div>
         </div>
-      )}
-
-      {!state.sender && (
-        <form
-          className="form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setState({
-              sender: document.getElementById("username_input").value,
-            });
-            userjoin(document.getElementById("username_input").value);
-            // userName.value = '';
-          }}
-        >
-          <div className="form-group">
-            <label>
-              User Name:
-              <br />
-              <input id="username_input" />
-            </label>
-          </div>
-          <br />
-
-          <br />
-          <br />
-          <button type="submit"> Click to join</button>
-        </form>
       )}
     </div>
   );

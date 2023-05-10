@@ -1,9 +1,16 @@
 const express = require('express');
 const app = express();
+const session = require('express-session');
 app.use(express.json());
 const configRoutes = require("./routes");
 const cors = require('cors');
 
+app.use(session({
+  name: "AuthCookie",
+  secret: 'Cookie for Workout Application',
+  resave: false,
+  saveUninitialized: true
+}))
 configRoutes(app);
 
 app.use(cors());
