@@ -8,7 +8,7 @@ Our project Gamify is a prlatform that will allow user to see a selection of gam
 
 Instructions:
 
-Initially to start the program after getting the code please npm install axios, redis, react-router-dom, mongodb, bycrpt.
+Initially to start the program after getting the code please npm i.
 
 After the npm installs lease do npm run seed, The seed file will contain a usernames alongside their respective passwords. Alongside this there will be users and that will have lists of games they will be selling that can be seen when looking thorugh the website. 
 
