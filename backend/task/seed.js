@@ -66,6 +66,16 @@ async function main() {
       "New",
       "Hoboken"
     );
+
+    await users.updateUser(
+      userData[0].username,
+      data.results[0].id,
+      data.results[0].name,
+      "$100",
+      "New",
+      "Hoboken"
+    );
+
     await games.createSellingGame(
       userData[0].username,
       data.results[0].id,
@@ -74,6 +84,16 @@ async function main() {
       "Fair",
       "Hoboken"
     );
+
+    await users.updateUser(
+      userData[0].username,
+      data.results[0].id,
+      data.results[0].name,
+      "$60",
+      "Fair",
+      "Hoboken"
+    );
+
     await games.createSellingGame(
       userData[1].username,
       data.results[0].id,
@@ -82,6 +102,16 @@ async function main() {
       "Like New",
       "Hoboken"
     );
+
+    await users.updateUser(
+      userData[1].username,
+      data.results[0].id,
+      data.results[0].name,
+      "$70",
+      "Like New",
+      "Hoboken"
+    );
+
     await games.createSellingGame(
       userData[2].username,
       data.results[0].id,
@@ -90,6 +120,16 @@ async function main() {
       "Like New",
       "Jersey City"
     );
+
+    await users.updateUser(
+      userData[2].username,
+      data.results[0].id,
+      data.results[0].name,
+      "$80",
+      "Like New",
+      "Jersey City"
+    );
+
     await games.createSellingGame(
       userData[0].username,
       data.results[2].id,
@@ -98,7 +138,26 @@ async function main() {
       "Like New",
       "Jersey City"
     );
+
+    await users.updateUser(
+      userData[0].username,
+      data.results[2].id,
+      data.results[2].name,
+      "$50",
+      "Like New",
+      "Jersey City"
+    );
+
     await games.createSellingGame(
+      userData[1].username,
+      data.results[3].id,
+      data.results[3].name,
+      "$80",
+      "Fair",
+      "Union City"
+    );
+
+    await users.updateUser(
       userData[1].username,
       data.results[3].id,
       data.results[3].name,

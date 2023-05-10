@@ -81,9 +81,10 @@ router.route("/logout").get(async (req, res) => {
   return res.redirect("/");
 });
 
-router.route("/get-user").get(async (req, res) => {
-  const { username } = req.body;
-  let info = await users.getUserByUsername(username);
+router.route("/getuser/:username").get(async (req, res) => {
+  // const { username } = req.body;
+  console.log(`getuser: ${req.params.username}}`);
+  let info = await users.getUser(req.params.username);
   return res.status(200).json(info);
 });
 
@@ -95,7 +96,7 @@ router.route("/register").get(async (req, res) => {
 router.route("/register").post(async (req, res) => {
   try {
     const { username, password, email } = req.body;
-    const user = await users.getUserByUsername(username);
+    const user = await users.getUser(username);
     if (user) {
       return res.render("register_page", {
         error: "Username already exists",
@@ -143,29 +144,22 @@ router.route("/update-user").post(async (req, res) => {
   res.status(200).json(info);
 });
 
+router.route("/get-prices/:username/:gameId").get(async (req, res) => {
+  let info = await users.getPrices(req.params.username, req.params.gameId);
+  res.status(200).json(info);
+});
 
-router
-    .route('/get-prices/:username/:gameId')
-    .get(async (req, res) => {
-        let info = await users.getPrices(req.params.username, req.params.gameId);
-        res.status(200).json(info);
-    })
+router.route("/selling/:username").get(async (req, res) => {
+  console.log("hi");
+  console.log(req.params.username);
+  let info = await users.getSelling(req.params.username);
+  res.status(200).json(info);
+});
 
-router
-    .route('/selling/:username')
-    .get(async (req, res) => {
-        console.log("hi");
-        console.log(req.params.username);
-        let info = await users.getSelling(req.params.username);
-        res.status(200).json(info);
-    })
-
-router
-    .route('/get-seller/:gameId')
-    .get(async (req, res) => {
-        console.log("hi");
-        console.log(req.params.gameId);
-        let info = await users.getSellersforgame(req.params.gameId);
-        res.status(200).json(info);
-    })
+router.route("/get-seller/:gameId").get(async (req, res) => {
+  console.log("hi");
+  console.log(req.params.gameId);
+  let info = await users.getSellersforgame(req.params.gameId);
+  res.status(200).json(info);
+});
 module.exports = router;
