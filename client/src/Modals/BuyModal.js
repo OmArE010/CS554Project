@@ -21,17 +21,18 @@ function BuyModal(props) {
     socketRef.current = io("/");
     const fetchData = async () => {
       try {
-        let { data } = await axios.get(`http://localhost:4000/get-seller/${props.gameId}`);
+        let { data } = await axios.get(
+          `http://localhost:4000/get-seller/${props.gameId}`
+        );
         data = data.flat(1);
         let data2 = data;
         console.log(data);
-
 
         // for(let i = 0; i < data2.length; i ++){
         //     console.log(i);
         //     console.log(data[i]);
         //     if(data[i].seller == 'omare'){
-        //         data.splice(data[i], 1); 
+        //         data.splice(data[i], 1);
         //     }
         // }
 
@@ -51,18 +52,21 @@ function BuyModal(props) {
   const onMessageSubmit = async (e) => {
     try {
       e.preventDefault();
-      let seller = await axios.post(`http://localhost:4000/user/get-user`, {
-        username: sendTo,
-      });
-      let msgEle = document.getElementById("message");
-      axiosRef.current.defaults.url = window.location.href;
-      const { data } = await axios.post(`http://localhost:4000/messages`, {
-        sender: currentUser,
-        message: msgEle.value,
-        receiver: seller,
-      });
-      msgEle.value = "";
-      msgEle.focus();
+      if (currentUser.loggedIn) {
+        console.log(`sendTo: ${sendTo}`);
+        let { data: seller} = await axios.get(`http://localhost:4000/getuser/${sendTo}`, {
+          username: String(sendTo),
+        });
+        let msgEle = document.getElementById("message");
+        axiosRef.current.defaults.url = window.location.href;
+        const { data } = await axios.post(`http://localhost:4000/messages`, {
+          sender: currentUser,
+          message: msgEle.value,
+          receiver: seller,
+        });
+        msgEle.value = "";
+        msgEle.focus();
+      }
     } catch (e) {
       console.log(e);
       setError(true);
@@ -128,15 +132,15 @@ function BuyModal(props) {
                   onChange={(e) => setSendTo(e.target.value)}
                 >
                   <option value="">Open this select menu 1</option>
-                  <option value="Jack">Jack</option>
                   {console.log("prices: " + prices)}
                   {prices
                     ? prices.map((i) => {
-                        return (
-                         i.seller !== currentUser.username ? <option key={i.id} value={i.id}>
+                        console.log(`i.seller: ${i.seller}`)
+                        return i.seller !== currentUser.username ? (
+                          <option key={i.id} value={i.seller}>
                             {i.seller + " -" + i.price}
-                          </option> : null
-                        );
+                          </option>
+                        ) : null;
                       })
                     : null}
                 </select>

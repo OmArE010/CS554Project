@@ -92,7 +92,7 @@ const updateUser = async (username, gameId, gameName, price, condition, location
 	const updatedInfo = await users.updateOne({username: username}, {$push: {gamesSelling: updatedGamesSelling}});
 
 	if(updatedInfo.modifiedCount === 0 && !updatedInfo.matchedCount){
-		throw "could not update recipe successfully";
+		throw "could not update user successfully";
 	  }
 
 	return getUser(username);
