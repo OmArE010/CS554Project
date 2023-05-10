@@ -206,7 +206,7 @@ function Messages() {
               <div className="chat-log" ref={chatLogRef}>
                 {renderChat()}
               </div>
-              <form className="send-box" onSubmit={onMessageSubmit}>
+              <form className="send-box bottom-0" onSubmit={onMessageSubmit}>
                 <div>
                   <label for="message" className="message-label">
                     Type a message

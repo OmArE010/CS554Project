@@ -44,7 +44,7 @@ function SellModal(props) {
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          {!user.loggedIn && (
+          {!currentUser.loggedIn && (
             <div
               class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 "
               role="alert"
@@ -55,7 +55,7 @@ function SellModal(props) {
           )}
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              Sell Your Game! {user.loggedIn}
+              Sell Your Game! {currentUser.loggedIn}
             </h1>
             <button
               type="button"
