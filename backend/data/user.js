@@ -167,7 +167,7 @@ module.exports = {
 	updateUser,
 	getSelling,
 	getallSellers,
-	getSellersforgame
+	getSellersforgame,
 	getPrices,
 	deletesellingGame
 	

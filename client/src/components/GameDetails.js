@@ -117,7 +117,7 @@ const GameDetails = (props) => {
             <h5 className="card-title">
               {gameData.name ? gameData.name : "No name Available"}
             </h5>
-            <p className="card-text">Copies Available: {copies}</p>
+            <p className="card-text" style={copies === 0? {color: 'red'} : {color: 'green'}}>Copies Available: {copies}</p>
             <ul className="list-group list-group-flush">
               <li className="list-group-item">
                 {gameData.rating === 0
@@ -163,6 +163,7 @@ const GameDetails = (props) => {
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none"
             data-bs-toggle="modal"
             data-bs-target="#buyModal"
+            disabled={copies === 0}
           >
             Buy Game
           </button>
