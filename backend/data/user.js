@@ -106,6 +106,32 @@ const getSelling = async(username) => {
 	return user.gamesSelling;
 }
 
+const getallSellers = async () => {
+	sellers = [];
+	let userscollection = await usersCollection();
+	let allusers = await userscollection.find({}).toArray();
+	for (let i = 0; i < allusers.length; i++) {
+		if(allusers[i].gamesSelling.length> 1){
+			sellers.push(allusers[i]);
+		}
+	}
+
+	return sellers;
+}
+
+const getSellersforgame = async (gameId) => {
+	gamessellers = [];
+	let userscollection = await getallSellers();
+		for (let i = 0; i < userscollection.length; i++) {
+			for(let j = 0; j< userscollection[i].gamesSelling.length; j++){
+				if(userscollection[i].gamesSelling[j].gameId == gameId){
+					gamessellers.push(userscollection[i]);
+				}
+			}
+		}
+	return gamessellers;
+}
+
 const getPrices = async(username, gameId) => {
 	let prices = [];
 	validation.errorIfNotProperUserName(username, "username");
@@ -140,6 +166,8 @@ module.exports = {
     getUser,
 	updateUser,
 	getSelling,
+	getallSellers,
+	getSellersforgame
 	getPrices,
 	deletesellingGame
 	
