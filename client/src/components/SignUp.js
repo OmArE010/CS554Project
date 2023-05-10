@@ -10,10 +10,10 @@ const SignUpForm = () =>
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
-            let data = await axios.post(`http://localhost:4000/user/signup`, {firstname: e.target.firstName.value, lastname: e.target.lastName.value, username: e.target.userName.value,
+            let data = await axios.post(`http://localhost:4000/signup`, {firstname: e.target.firstName.value, lastname: e.target.lastName.value, username: e.target.userName.value,
             password: e.target.password.value});
             console.log(data);
-            navigate('/games/1');
+            navigate('/login');
         }catch(e){
             console.log(e.response.data.error);
             alert(e.response.data.error);

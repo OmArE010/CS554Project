@@ -111,7 +111,7 @@ const getallSellers = async () => {
 	let userscollection = await usersCollection();
 	let allusers = await userscollection.find({}).toArray();
 	for (let i = 0; i < allusers.length; i++) {
-		if(allusers[i].gamesSelling.length> 1){
+		if(allusers[i].gamesSelling.length>= 1){
 			sellers.push(allusers[i]);
 		}
 	}
@@ -121,15 +121,24 @@ const getallSellers = async () => {
 
 const getSellersforgame = async (gameId) => {
 	gamessellers = [];
+	answers = [];
 	let userscollection = await getallSellers();
+	console.log(userscollection);
 		for (let i = 0; i < userscollection.length; i++) {
-			for(let j = 0; j< userscollection[i].gamesSelling.length; j++){
+			for(let j = 0; j < userscollection[i].gamesSelling.length; j++){
+				console.log(typeof(userscollection[i].gamesSelling[j].gameId));
+				console.log(typeof(gameId));
 				if(userscollection[i].gamesSelling[j].gameId == gameId){
-					gamessellers.push(userscollection[i]);
+					gamessellers.push(userscollection[i].username);
+					let prices = await getPrices(userscollection[i].username, gameId);
+					answers.push(prices);
 				}
+				break;
 			}
 		}
-	return gamessellers;
+		//answers = answers.flat(1);
+	console.log(answers);
+	return answers;
 }
 
 const getPrices = async(username, gameId) => {
@@ -147,6 +156,25 @@ const getPrices = async(username, gameId) => {
 	}
 	return prices;
 }
+
+// const getPrices = async(usernames, gameId) => {
+// 	for (let i = 0 ; i < usernames.length; i++){
+// 		let prices = [];
+// 		//validation.errorIfNotProperUserName(usernames[i], "username");
+// 		let users = await usersCollection();
+// 		let username = usernames[i].toLowerCase().trim();
+// 		let user = await users.findOne({username: username});
+// 		console.log(user);
+// 		for (let i = 0; i < user.gamesSelling.length; i ++){
+// 			if(user.gamesSelling[i].gameId == gameId){
+// 				//prices[user.gamesSelling[i].id] = [user.gamesSelling[i].gameName, user.gamesSelling[i].price];
+// 				prices.push({seller: username, id: user.gamesSelling[i].id, name: user.gamesSelling[i].gameName, price: user.gamesSelling[i].price});
+// 			}
+// 		}
+// 	}
+// 	return prices;
+// }
+
 
 //delete game from selling
 const deletesellingGame = async (username, gameId) => {
